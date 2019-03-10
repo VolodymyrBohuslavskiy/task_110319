@@ -21,4 +21,16 @@ public class Department {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "department")
     List<Employee> employees;
+
+    public Department() {
+    }
+
+    public Department(String dpName, List<Employee> employees) {
+        this.dpName = dpName;
+        this.employees = employees;
+    }
+
+    public Department(String dpName) {
+        this.dpName = dpName;
+    }
 }

@@ -15,6 +15,7 @@ public class EmployeeService {
     public void save(Employee employee) {
         employeeDAO.save(employee);
     }
+
     public List<Employee> findAll() {
         return employeeDAO.findAll();
     }
@@ -23,7 +24,13 @@ public class EmployeeService {
         return employeeDAO.getOne(empID);
     }
 
-    public void deleteById(int empID) {
+    public void deleteByEmpID(int empID) {
         employeeDAO.deleteById(empID);
     }
+
+    public List<Employee> findByEmpNameStartingWith(String startingWith) {
+        return employeeDAO.findByEmpNameStartingWith(startingWith);
+    }
+
+
 }

@@ -9,7 +9,10 @@ import com.task_110319.task_110319.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 
+
+@CrossOrigin("*")
 @RestController
 public class mainController {
     @Autowired
@@ -18,21 +21,16 @@ public class mainController {
     DepartmentService departmentService;
 
     @PostMapping("/add-employee")
-    public void add_employee(Employee employee) {
-        employeeService.save(employee);
+    public void add_employee(@RequestBody String employee) throws IOException {
+        Employee e = new ObjectMapper().readValue(employee, Employee.class);
+        e.setDepartment(null);
+        employeeService.save(e);
     }
 
-    @PostMapping("/add-department")
-    public void add_department(Department department) {
-        departmentService.save(department);
-    }
 
-    @PutMapping("/add-empl-to-dep")
-    public void addempltodep(@RequestParam int empID, @RequestParam int dpID) {
-        Employee employee = employeeService.getOne(empID);
-        Department department = departmentService.getOne(dpID);
-        employee.setDepartment(department);
-        employeeService.save(employee);
+    @PostMapping("/add-dep")
+    public void addDep(@RequestBody String departamtnt) throws IOException {
+        departmentService.save(new ObjectMapper().readValue(departamtnt, Department.class));
     }
 
     @GetMapping("/sowallempl")
@@ -40,22 +38,19 @@ public class mainController {
         return new ObjectMapper().writeValueAsString(employeeService.findAll());
     }
 
-
     @GetMapping("/sowalldep")
     public String sowalldep() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(departmentService.findAll());
     }
 
-    @DeleteMapping("/delete-empl")
-    public void delete_empl(@RequestParam int empID){
-        employeeService.deleteById(empID);
+    @DeleteMapping("/delete-empl{empID}")
+    public void delete_empl(@PathVariable int empID) {
+        employeeService.deleteByEmpID(empID);
     }
 
-    @DeleteMapping("/delete-dep")
-    public void delete_dep(@RequestParam int dpID){
-        departmentService.deleteById(dpID);
+    @GetMapping("/findbyname-{name}")
+    public String findbyname(@PathVariable String name) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(employeeService.findByEmpNameStartingWith(name));
     }
-
-
 
 }
